@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiện Diện Cho Nhau</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Be+Vietnam+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('zlV5kWPROP3fOY7L4');</script>
+<style>
+  :root {
+    --green: #2D6A4F; --green-light: #52B788; --green-pale: #D8F3DC;
+    --green-soft: #B7E4C7; --cream: #FDFBF7; --warm: #F0EBE3;
+    --text: #1B2926; --text-muted: #5C7268; --border: rgba(45,106,79,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Be Vietnam Pro', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  .hero { background: var(--green); color: white; padding: 3.5rem 1.5rem 3rem; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 60%, rgba(82,183,136,0.25) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(82,183,136,0.15) 0%, transparent 50%); pointer-events: none; }
+  .hero-leaf { font-size: 2rem; margin-bottom: 1rem; display: block; opacity: 0.85; }
+  .hero h1 { font-family: 'Lora', serif; font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 400; line-height: 1.2; margin-bottom: 0.75rem; }
+  .hero-sub { font-size: 1rem; opacity: 0.75; font-style: italic; font-family: 'Lora', serif; max-width: 360px; margin: 0 auto 1.5rem; line-height: 1.6; }
+  .hero-pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .pill { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 4px 14px; font-size: 12px; color: rgba(255,255,255,0.85); }
+
+  .main { max-width: 560px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+  .landing-screen { animation: fadeUp 0.3s ease; }
+  .landing-btns { display: grid; gap: 14px; }
+  .landing-btn { display: flex; align-items: center; gap: 16px; padding: 1.25rem 1.5rem; border: 1.5px solid var(--border); background: white; border-radius: 14px; cursor: pointer; transition: all 0.2s; text-align: left; font-family: 'Be Vietnam Pro', sans-serif; box-shadow: 0 2px 12px rgba(45,106,79,0.05); }
+  .landing-btn:hover { border-color: var(--green-light); background: var(--green-pale); }
+  .landing-btn.primary { border-color: var(--green); background: var(--green); color: white; }
+  .landing-btn.primary:hover { background: #1B4D38; border-color: #1B4D38; }
+  .landing-btn.primary .lb-icon { background: rgba(255,255,255,0.2); }
+  .landing-btn.primary .lb-title { color: white; }
+  .landing-btn.primary .lb-desc { color: rgba(255,255,255,0.75); }
+  .lb-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--green-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .lb-icon svg { width: 22px; height: 22px; }
+  .lb-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .lb-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  .lookup-screen { animation: fadeUp 0.25s ease; }
+  .lookup-card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem 1.5rem; box-shadow: 0 2px 20px rgba(45,106,79,0.05); }
+  .lookup-title { font-family: 'Lora', serif; font-size: 1rem; color: var(--green); margin-bottom: 0.5rem; font-style: italic; }
+  .lookup-note { font-size: 13px; color: var(--text-muted); margin-bottom: 1.25rem; line-height: 1.6; }
+  .lookup-result { background: var(--green-pale); border: 1px solid var(--green-soft); border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1rem; font-size: 13px; line-height: 2; color: var(--green); display: none; }
+  .lookup-result.show { display: block; }
+  .lookup-error { background: #fff0f0; border: 1px solid #ffc0c0; border-radius: 10px; padding: 10px 14px; margin-top: 10px; font-size: 13px; color: #b04040; display: none; }
+  .lookup-error.show { display: block; }
+  .btn-back { display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 9px 18px; font-size: 13px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; margin-bottom: 1.25rem; }
+  .btn-back:hover { border-color: var(--green-light); color: var(--green); }
+
+  .steps { display: flex; align-items: center; margin-bottom: 2rem; }
+  .step { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); flex: 1; }
+  .step.active { color: var(--green); font-weight: 500; }
+  .step.done { color: var(--green-light); }
+  .step-dot { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+  .step.active .step-dot { background: var(--green); color: white; border-color: var(--green); }
+  .step.done .step-dot { background: var(--green-light); color: white; border-color: var(--green-light); }
+  .step-line { flex: 1; height: 1px; background: var(--border); margin: 0 6px; }
+
+  .cal-card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 20px rgba(45,106,79,0.05); }
+  .cal-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .cal-title { font-family: 'Lora', serif; font-size: 1.1rem; font-weight: 400; color: var(--green); }
+  .nav-btn { width: 32px; height: 32px; border: 1px solid var(--border); background: transparent; border-radius: 8px; cursor: pointer; font-size: 16px; color: var(--text-muted); display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .nav-btn:hover { background: var(--green-pale); border-color: var(--green-soft); color: var(--green); }
+  .day-labels { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 4px; }
+  .day-lbl { text-align: center; font-size: 11px; color: var(--text-muted); padding: 4px 0; font-weight: 500; }
+  .day-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .day-cell { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; font-size: 13px; cursor: default; position: relative; color: var(--text-muted); transition: all 0.15s; }
+  .day-cell.has-slot { cursor: pointer; color: var(--green); font-weight: 500; background: var(--green-pale); }
+  .day-cell.has-slot:hover { background: var(--green-soft); }
+  .day-cell.has-slot::after { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--green-light); position: absolute; bottom: 4px; }
+  .day-cell.selected { background: var(--green) !important; color: white !important; }
+  .day-cell.selected::after { background: rgba(255,255,255,0.5); }
+  .day-cell.full { background: var(--warm); color: #bbb; }
+  .day-cell.past { opacity: 0.25; }
+  .slots-section { animation: fadeUp 0.2s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .slots-label { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+  .slots-label strong { color: var(--green); }
+  .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1.5rem; }
+  .slot-btn { padding: 10px 6px; border: 1px solid var(--border); background: white; border-radius: 10px; font-size: 14px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; text-align: center; }
+  .slot-btn:hover { border-color: var(--green-light); color: var(--green); background: var(--green-pale); }
+  .slot-btn.selected { border-color: var(--green); background: var(--green); color: white; font-weight: 500; }
+
+  .form-card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 20px rgba(45,106,79,0.05); animation: fadeUp 0.25s ease; }
+  .form-section-title { font-family: 'Lora', serif; font-size: 1rem; color: var(--green); margin-bottom: 1.25rem; font-style: italic; }
+  .booking-summary { background: var(--green-pale); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--green); margin-bottom: 1.25rem; line-height: 1.7; }
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 5px; letter-spacing: 0.02em; text-transform: uppercase; }
+  .field input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text); background: var(--cream); outline: none; transition: border-color 0.15s; }
+  .field input:focus { border-color: var(--green-light); background: white; }
+  .field input::placeholder { color: #B0BDB9; }
+  .mindful-note { background: var(--green-pale); border-radius: 12px; padding: 14px 16px; margin-bottom: 1rem; font-size: 13px; color: var(--green); line-height: 1.8; font-style: italic; }
+  .intent-wrap { margin-bottom: 1rem; }
+  .intent-wrap label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.02em; text-transform: uppercase; }
+  .intent-reminder { font-size: 12px; color: var(--green); background: var(--green-pale); border-radius: 8px; padding: 7px 12px; margin-bottom: 10px; line-height: 1.6; }
+  .intent-btns { display: flex; gap: 8px; }
+  .intent-btn { flex: 1; padding: 10px 8px; border: 1px solid var(--border); background: transparent; border-radius: 10px; font-size: 13px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; text-align: center; }
+  .intent-btn:hover { border-color: var(--green-light); color: var(--green); }
+  .intent-btn.selected { border-color: var(--green); background: var(--green-pale); color: var(--green); font-weight: 500; }
+  .bank-box { background: var(--green-pale); border: 1px solid var(--green-soft); border-radius: 10px; padding: 12px 14px; margin-top: 10px; font-size: 13px; line-height: 2; color: var(--green); }
+  .bank-box span { color: var(--text-muted); display: inline-block; min-width: 90px; font-size: 12px; }
+  .form-footer-btns { display: flex; gap: 10px; margin-top: 0.5rem; }
+  .btn-submit { flex: 1; padding: 13px; background: var(--green); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 500; font-family: 'Be Vietnam Pro', sans-serif; cursor: pointer; transition: background 0.2s; }
+  .btn-submit:hover { background: #1B4D38; }
+  .btn-back-step { padding: 13px 18px; background: transparent; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .btn-back-step:hover { border-color: var(--green-light); color: var(--green); }
+
+  .confirm-screen { text-align: center; padding: 2rem 1rem; animation: fadeUp 0.3s ease; }
+  .confirm-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--green-pale); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 1.25rem; }
+  .confirm-screen h2 { font-family: 'Lora', serif; font-size: 1.4rem; font-weight: 400; color: var(--green); margin-bottom: 0.5rem; }
+  .confirm-screen p { font-size: 14px; color: var(--text-muted); line-height: 1.7; max-width: 340px; margin: 0 auto 1.5rem; }
+  .confirm-detail { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; text-align: left; font-size: 13px; line-height: 2; margin-bottom: 1rem; }
+  .confirm-detail div { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); }
+  .confirm-detail div:last-child { border-bottom: none; }
+  .confirm-detail span { color: var(--text-muted); }
+  .confirm-detail strong { color: var(--green); }
+  .booking-code-box { background: var(--green); color: white; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; text-align: center; }
+  .booking-code-label { font-size: 11px; letter-spacing: 0.08em; opacity: 0.75; text-transform: uppercase; margin-bottom: 6px; }
+  .booking-code { font-family: 'Lora', serif; font-size: 1.8rem; letter-spacing: 0.12em; font-weight: 500; margin-bottom: 4px; }
+  .booking-code-note { font-size: 11px; opacity: 0.7; line-height: 1.5; }
+  .btn-new { background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 10px 24px; font-size: 14px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+  .btn-new:hover { border-color: var(--green-light); color: var(--green); }
+
+  .legend { display: flex; gap: 16px; font-size: 12px; color: var(--text-muted); margin-bottom: 1rem; flex-wrap: wrap; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+  .footer { text-align: center; padding: 2rem 1.5rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); line-height: 2; }
+  .footer a { color: var(--green); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="hero-leaf">🌿</span>
+  <h1>Hiện Diện Cho Nhau</h1>
+  <p class="hero-sub">Một buổi lắng nghe. Bảo mật. Không phán xét. Chỉ có mặt.</p>
+  <div class="hero-pills">
+    <span class="pill">60 phút · 1-1</span>
+    <span class="pill">Online qua Zoom / Meet</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <div id="screen-landing" class="landing-screen">
+    <p style="font-family:'Lora',serif;font-size:1rem;color:var(--text-muted);text-align:center;line-height:1.8;font-style:italic;margin-bottom:2rem;padding:0 0.5rem;">Dù câu chuyện bạn đang mang là gì, nó xứng đáng được đón nhận với sự cởi mở, kiên nhẫn và chấp nhận.</p>
+    <div class="landing-btns">
+      <button class="landing-btn primary" onclick="goBook()">
+        <div class="lb-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22C12 22 4 16 4 9C4 5.13 7.13 2 11 2C11.34 2 11.68 2.03 12 2.08C12.32 2.03 12.66 2 13 2C16.87 2 20 5.13 20 9C20 16 12 22 12 22Z" fill="rgba(255,255,255,0.9)"/>
+            <path d="M12 2.08C12 2.08 8 7 8 12C8 15.31 9.75 18.22 12 20.5C14.25 18.22 16 15.31 16 12C16 7 12 2.08 12 2.08Z" fill="rgba(255,255,255,0.3)"/>
+          </svg>
+        </div>
+        <div>
+          <div class="lb-title">Đặt lịch mới</div>
+          <div class="lb-desc">Chọn ngày giờ và điền thông tin để đặt buổi lắng nghe</div>
+        </div>
+      </button>
+      <button class="landing-btn" onclick="goLookup()">
+        <div class="lb-icon" style="background:var(--green-soft)">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 22C12 22 4 16 4 9C4 5.13 7.13 2 11 2C11.34 2 11.68 2.03 12 2.08C12.32 2.03 12.66 2 13 2C16.87 2 20 5.13 20 9C20 16 12 22 12 22Z" fill="#2D6A4F"/>
+            <path d="M12 2.08C12 2.08 8 7 8 12C8 15.31 9.75 18.22 12 20.5C14.25 18.22 16 15.31 16 12C16 7 12 2.08 12 2.08Z" fill="rgba(45,106,79,0.3)"/>
+          </svg>
+        </div>
+        <div>
+          <div class="lb-title">Bạn đã có lịch hẹn</div>
+          <div class="lb-desc">Nhập mã hẹn để xem hoặc điều chỉnh lịch đã đặt</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <div id="screen-lookup" class="lookup-screen hidden">
+    <button class="btn-back" onclick="goLanding()">&#8592; Quay lại</button>
+    <div class="lookup-card">
+      <div class="lookup-title">Tra cứu lịch hẹn</div>
+      <div class="lookup-note">Nhập mã hẹn bạn đã nhận được sau khi đặt lịch.</div>
+      <div class="field">
+        <label>Mã hẹn</label>
+        <input type="text" id="lookup-code" placeholder="Ví dụ: HDN-2G8K" style="text-transform:uppercase;letter-spacing:0.05em" oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <button class="btn-submit" onclick="doLookup()" style="margin-top:0">Tra cứu &#8594;</button>
+      <div class="lookup-error" id="lookup-error">Không tìm thấy mã hẹn này. Vui lòng kiểm tra lại hoặc liên hệ mình nhé.</div>
+      <div class="lookup-result" id="lookup-result"></div>
+    </div>
+  </div>
+
+  <div id="screen-booking" class="hidden">
+    <div class="steps">
+      <div class="step active" id="step1"><div class="step-dot">1</div> Chọn lịch</div>
+      <div class="step-line"></div>
+      <div class="step" id="step2"><div class="step-dot">2</div> Thông tin</div>
+      <div class="step-line"></div>
+      <div class="step" id="step3"><div class="step-dot">3</div> Xác nhận</div>
+    </div>
+
+    <div id="screen-cal">
+      <button class="btn-back" onclick="goLanding()">&#8592; Trang chủ</button>
+      <div class="cal-card">
+        <div class="cal-nav-row">
+          <button class="nav-btn" onclick="changeMonth(-1)">&#8249;</button>
+          <span class="cal-title" id="cal-title"></span>
+          <button class="nav-btn" onclick="changeMonth(1)">&#8250;</button>
+        </div>
+        <div class="day-labels" id="day-labels"></div>
+        <div class="day-grid" id="day-grid"></div>
+      </div>
+      <div class="legend">
+        <span><span class="legend-dot" style="background:var(--green-pale);border:1px solid var(--green-soft)"></span>Còn trống</span>
+        <span><span class="legend-dot" style="background:var(--warm)"></span>Đã kín</span>
+      </div>
+      <div class="slots-section hidden" id="slots-section">
+        <div class="slots-label">Chọn giờ ngày <strong id="slot-date-label"></strong>:</div>
+        <div class="slots-grid" id="slots-grid"></div>
+      </div>
+    </div>
+
+    <div id="screen-form" class="hidden">
+      <button class="btn-back" onclick="backToCal()">&#8592; Quay lại chọn lịch</button>
+      <div class="form-card">
+        <div class="form-section-title">Cho mình biết thêm về bạn nhé</div>
+        <div class="booking-summary" id="booking-summary"></div>
+        <div class="field">
+          <label>Tên của bạn</label>
+          <input type="text" id="f-name" placeholder="Bạn muốn mình gọi bạn là...">
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="f-email" placeholder="Để mình xác nhận lịch">
+        </div>
+        <div class="mindful-note">🌿 Hiện diện cho nhau cần sự yên tĩnh, riêng tư và chú tâm. Rất mong bạn sẽ tạo được cho mình một không gian và thời gian như vậy để sự hiện diện được trọn vẹn.</div>
+        <div class="intent-wrap">
+          <label>Đóng góp</label>
+          <p class="intent-reminder">Dù bạn đóng góp hay không, sự hiện diện của chúng ta vẫn có cùng ý nghĩa.</p>
+          <div class="intent-btns">
+            <button type="button" class="intent-btn" id="intent-yes" onclick="setIntent('yes')">Mình dự định đóng góp</button>
+            <button type="button" class="intent-btn" id="intent-no" onclick="setIntent('no')">Miễn phí lần này</button>
+          </div>
+          <div class="bank-box hidden" id="bank-box">
+            <div><span>Ngân hàng</span> PVcombank</div>
+            <div><span>Số TK</span> 10600056302</div>
+            <div><span>Tên</span> Dang Thi Thanh Thuy</div>
+          </div>
+        </div>
+        <div class="form-footer-btns">
+          <button class="btn-back-step" onclick="backToCal()">&#8592; Quay lại</button>
+          <button class="btn-submit" onclick="submitForm()">Gửi đặt lịch &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-confirm" class="hidden">
+      <div class="confirm-screen">
+        <div class="confirm-icon">🌱</div>
+        <h2>Mình đã nhận được!</h2>
+        <p>Cảm ơn bạn đã tin tưởng. Mình sẽ xác nhận lịch qua email trong vòng 24 giờ nhé.</p>
+        <div class="confirm-detail" id="confirm-detail"></div>
+        <div class="booking-code-box">
+          <div class="booking-code-label">Mã hẹn của bạn</div>
+          <div class="booking-code" id="booking-code-display"></div>
+          <div class="booking-code-note">Lưu mã này lại nhé — bạn có thể dùng để tra cứu hoặc điều chỉnh lịch hẹn nếu cần.</div>
+        </div>
+        <div id="confirm-bank-extra"></div>
+        <button class="btn-new" onclick="resetAll()">Đặt lịch khác</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Dự án <strong>Hiện Diện Cho Nhau</strong> — để mọi cảm xúc và trải nghiệm của bạn được chăm sóc.<br>
+  Mọi thắc mắc xin liên hệ:&nbsp;
+  📧 <span id="femail"></span>
+  &nbsp;·&nbsp;
+  📞 <a href="tel:0912006245">0912 006 245</a>
+</div>
+
+<script>
+(function(){
+  var a = 'thuysw', b = 'gmail.com';
+  var el = document.getElementById('femail');
+  el.innerHTML = '<a href="mai' + 'lto:' + a + '@' + b + '">' + a + '@' + b + '</a>';
+})();
+
+const DAYS_VN = ['CN','T2','T3','T4','T5','T6','T7'];
+const MONTHS_VN = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+const SLOTS = ['09:00','10:00','14:00','15:00','16:00','19:00'];
+const START = new Date(2026, 3, 1);
+
+const BOOKED = new Set([
+  '2026-04-01','2026-04-03','2026-04-06','2026-04-08','2026-04-10',
+  '2026-04-13','2026-04-15','2026-04-17','2026-04-20','2026-04-22',
+  '2026-04-24','2026-04-27','2026-04-29','2026-05-06',
+]);
+
+const BOOKINGS = {};
+
+function genCode(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let c = 'HDN-';
+  for(let i=0;i<4;i++) c += chars[Math.floor(Math.random()*chars.length)];
+  return c;
+}
+
+function pad(n){ return n<10?'0'+n:n; }
+function toKey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+
+function isOpen(date){
+  const today = new Date(); today.setHours(0,0,0,0);
+  if(date<today||date<START) return false;
+  if(![1,3,5].includes(date.getDay())) return false;
+  return !BOOKED.has(toKey(date));
+}
+
+let cy=2026, cm=3, selDate=null, selSlot=null;
+
+function show(id){ document.getElementById(id).classList.remove('hidden'); }
+function hide(id){ document.getElementById(id).classList.add('hidden'); }
+
+function goLanding(){
+  hide('screen-lookup'); hide('screen-booking'); show('screen-landing');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goBook(){
+  hide('screen-landing'); hide('screen-lookup'); show('screen-booking');
+  show('screen-cal'); hide('screen-form'); hide('screen-confirm');
+  setStep(1); renderCal(); window.scrollTo({top:0,behavior:'smooth'});
+}
+function goLookup(){
+  hide('screen-landing'); hide('screen-booking'); show('screen-lookup');
+  document.getElementById('lookup-code').value='';
+  document.getElementById('lookup-error').classList.remove('show');
+  document.getElementById('lookup-result').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function backToCal(){
+  hide('screen-form'); show('screen-cal'); setStep(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function doLookup(){
+  const code = document.getElementById('lookup-code').value.trim().toUpperCase();
+  const errEl = document.getElementById('lookup-error');
+  const resEl = document.getElementById('lookup-result');
+  errEl.classList.remove('show'); resEl.classList.remove('show');
+  if(!code){ errEl.classList.add('show'); return; }
+  const b = BOOKINGS[code];
+  if(!b){ errEl.classList.add('show'); return; }
+  const p = b.date.split('-');
+  const ds = parseInt(p[2])+'/'+parseInt(p[1])+'/'+p[0];
+  resEl.innerHTML =
+    '<div style="font-weight:500;margin-bottom:6px;">Lịch hẹn của bạn 🌿</div>'+
+    '<div><span style="color:var(--text-muted);display:inline-block;min-width:60px;font-size:12px;">Mã</span> '+code+'</div>'+
+    '<div><span style="color:var(--text-muted);display:inline-block;min-width:60px;font-size:12px;">Tên</span> '+b.name+'</div>'+
+    '<div><span style="color:var(--text-muted);display:inline-block;min-width:60px;font-size:12px;">Ngày</span> '+ds+' · '+b.slot+'</div>'+
+    '<div style="margin-top:10px;font-size:12px;color:var(--text-muted);">Nếu bạn muốn đổi lịch, vui lòng liên hệ mình qua email nhé.</div>';
+  resEl.classList.add('show');
+}
+
+function renderCal(){
+  document.getElementById('cal-title').textContent = MONTHS_VN[cm]+' '+cy;
+  document.getElementById('day-labels').innerHTML = DAYS_VN.map(d=>'<div class="day-lbl">'+d+'</div>').join('');
+  const first = new Date(cy,cm,1).getDay();
+  const total = new Date(cy,cm+1,0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+  let h='';
+  for(let i=0;i<first;i++) h+='<div class="day-cell"></div>';
+  for(let d=1;d<=total;d++){
+    const date=new Date(cy,cm,d);
+    const key=toKey(date);
+    const past=date<today||date<START;
+    const open=isOpen(date);
+    const booked=!open&&!past&&[1,3,5].includes(date.getDay())&&date>=START;
+    const sel=selDate===key;
+    let cls='day-cell'+(past?' past':sel?' selected':open?' has-slot':booked?' full':'');
+    const click=open?'onclick="pick(\''+key+'\')"':'';
+    h+='<div class="'+cls+'" '+click+'>'+d+'</div>';
+  }
+  document.getElementById('day-grid').innerHTML=h;
+}
+
+function pick(key){
+  selDate=key; selSlot=null; renderCal();
+  const p=key.split('-');
+  document.getElementById('slot-date-label').textContent=parseInt(p[2])+'/'+parseInt(p[1])+'/'+p[0];
+  document.getElementById('slots-grid').innerHTML=SLOTS.map(s=>'<button class="slot-btn" onclick="pickSlot(\''+s+'\',this)">'+s+'</button>').join('');
+  document.getElementById('slots-section').classList.remove('hidden');
+}
+
+function pickSlot(s,el){
+  selSlot=s;
+  document.querySelectorAll('.slot-btn').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  setTimeout(toForm,250);
+}
+
+function toForm(){
+  const p=selDate.split('-');
+  document.getElementById('booking-summary').textContent='📅  '+parseInt(p[2])+'/'+parseInt(p[1])+'/'+p[0]+' · '+selSlot+'  —  60 phút · Online';
+  hide('screen-cal'); show('screen-form');
+  setStep(2); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+let intentVal=null;
+
+function setIntent(val){
+  intentVal=val;
+  document.getElementById('intent-yes').classList.toggle('selected',val==='yes');
+  document.getElementById('intent-no').classList.toggle('selected',val==='no');
+  document.getElementById('bank-box').classList.toggle('hidden',val!=='yes');
+}
+
+function submitForm(){
+  const name=document.getElementById('f-name').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  if(!name||!email){alert('Vui lòng điền tên và email nhé.');return;}
+
+  const submitBtn = document.querySelector('.btn-submit');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Đang gửi...';
+
+  const p=selDate.split('-');
+  const ds=parseInt(p[2])+'/'+parseInt(p[1])+'/'+p[0];
+
+  let code;
+  do{ code=genCode(); }while(BOOKINGS[code]);
+
+  const intentText = intentVal==='yes' ? 'Dự định đóng góp' : 'Miễn phí lần này';
+
+  const templateParams = {
+    to_name: name,
+    to_email: email,
+    booking_date: ds,
+    booking_time: selSlot,
+    booking_code: code,
+    intent: intentText,
+    reply_to: 'thuysw@gmail.com'
+  };
+
+  emailjs.send('service_sz7t5we', 'template_elidj2x', templateParams)
+    .then(function(){
+      // Email gửi thành công — cập nhật state và hiện màn hình xác nhận
+      BOOKED.add(selDate);
+      BOOKINGS[code]={name,email,date:selDate,slot:selSlot,intent:intentVal};
+      renderCal();
+      showConfirmScreen(name, email, ds, code);
+    })
+    .catch(function(err){
+      console.error('EmailJS error:', err);
+      // Vẫn lưu booking và hiện xác nhận dù email lỗi, thông báo nhẹ cho khách
+      BOOKED.add(selDate);
+      BOOKINGS[code]={name,email,date:selDate,slot:selSlot,intent:intentVal};
+      renderCal();
+      showConfirmScreen(name, email, ds, code, true);
+    })
+    .finally(function(){
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Gửi đặt lịch →';
+    });
+}
+
+function showConfirmScreen(name, email, ds, code, emailFailed){
+  document.getElementById('booking-code-display').textContent=code;
+  document.getElementById('confirm-detail').innerHTML=
+    '<div><span>Tên</span><strong>'+name+'</strong></div>'+
+    '<div><span>Email</span><strong>'+email+'</strong></div>'+
+    '<div><span>Ngày</span><strong>'+ds+' · '+selSlot+'</strong></div>';
+  const confirmBank = intentVal==='yes'
+    ? '<div style="margin-bottom:1.5rem;background:var(--green-pale);border:1px solid var(--green-soft);border-radius:10px;padding:12px 14px;font-size:13px;line-height:2;color:var(--green);text-align:left;"><div style="font-weight:500;margin-bottom:4px;">Thông tin chuyển khoản</div><div><span style="color:var(--text-muted);min-width:90px;display:inline-block;font-size:12px;">Ngân hàng</span> PVcombank</div><div><span style="color:var(--text-muted);min-width:90px;display:inline-block;font-size:12px;">Số TK</span> 10600056302</div><div><span style="color:var(--text-muted);min-width:90px;display:inline-block;font-size:12px;">Tên</span> Dang Thi Thanh Thuy</div></div>'
+    : '';
+  document.getElementById('confirm-bank-extra').innerHTML=confirmBank;
+  if(emailFailed){
+    document.getElementById('confirm-bank-extra').innerHTML += '<div style="margin-top:10px;background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:10px 14px;font-size:13px;color:#795548;">📧 Email xác nhận chưa gửi được tự động. Mình sẽ liên hệ bạn qua email trong vòng 24 giờ nhé.</div>';
+  }
+  hide('screen-form'); show('screen-confirm');
+  setStep(3); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function setStep(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('step'+i).className='step'+(i<n?' done':i===n?' active':'');
+  });
+}
+
+function changeMonth(dir){
+  cm+=dir; if(cm>11){cm=0;cy++;} if(cm<0){cm=11;cy--;}
+  selDate=null; selSlot=null;
+  document.getElementById('slots-section').classList.add('hidden');
+  renderCal();
+}
+
+function resetAll(){
+  selDate=null; selSlot=null; intentVal=null;
+  ['f-name','f-email'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('intent-yes').classList.remove('selected');
+  document.getElementById('intent-no').classList.remove('selected');
+  document.getElementById('bank-box').classList.add('hidden');
+  hide('screen-confirm'); hide('screen-form'); hide('screen-booking');
+  show('screen-landing');
+  setStep(1); renderCal(); window.scrollTo({top:0,behavior:'smooth'});
+}
+
+renderCal();
+</script>
+</body>
+</html>
