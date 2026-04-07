@@ -295,6 +295,8 @@ const MONTHS_VN = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Thán
 const SLOTS = ['09:00','10:00','14:00','15:00','16:00','19:00'];
 const START = new Date(2026, 3, 1);
 
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxt90XHmDLVF1wSko-GJpiUXBn2fiAaNt_un7-FuVEG77vWfC9DavtcSbIDjHJgVRinmA/exec';
+
 const BOOKED = new Set([
   '2026-04-01','2026-04-03','2026-04-06','2026-04-08','2026-04-10',
   '2026-04-13','2026-04-15','2026-04-17','2026-04-20','2026-04-22',
@@ -302,6 +304,42 @@ const BOOKED = new Set([
 ]);
 
 const BOOKINGS = {};
+
+// Load booked dates from Google Sheets on page load
+async function loadBooked(){
+  try {
+    const res = await fetch(SHEET_URL);
+    const data = await res.json();
+    if(data.booked) data.booked.forEach(d => { if(d) BOOKED.add(d); });
+    renderCal();
+  } catch(e) {
+    console.warn('Không load được lịch từ server:', e);
+    renderCal();
+  }
+}
+
+const FORM_URL = 'https://docs.google.com/forms/d/1XSTkAvDEB-Hbs3e7PM61ipZKCm9pleObaQRpEB5wkss/formResponse';
+
+async function saveToSheet(booking){
+  try {
+    const params = new URLSearchParams({
+      'entry.2081757579': booking.code,
+      'entry.1562671471': booking.name,
+      'entry.2071255051': booking.email,
+      'entry.1542614496': booking.date,
+      'entry.983442579': booking.slot,
+      'entry.1297781007': booking.intent
+    });
+    await fetch(FORM_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: params.toString()
+    });
+  } catch(e) {
+    console.warn('Không lưu được lên sheet:', e);
+  }
+}
 
 function genCode(){
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -446,10 +484,11 @@ function submitForm(){
   };
 
   emailjs.send('service_sz7t5we', 'template_elidj2x', templateParams)
-    .then(function(){
-      // Email gửi thành công — cập nhật state và hiện màn hình xác nhận
+    .then(async function(){
+      // Email gửi thành công — lưu lên Sheet và cập nhật lịch
       BOOKED.add(selDate);
       BOOKINGS[code]={name,email,date:selDate,slot:selSlot,intent:intentVal};
+      await saveToSheet({code,name,email,date:selDate,slot:selSlot,intent:intentVal||''});
       renderCal();
       showConfirmScreen(name, email, ds, code);
     })
@@ -458,6 +497,7 @@ function submitForm(){
       // Vẫn lưu booking và hiện xác nhận dù email lỗi, thông báo nhẹ cho khách
       BOOKED.add(selDate);
       BOOKINGS[code]={name,email,date:selDate,slot:selSlot,intent:intentVal};
+      saveToSheet({code,name,email,date:selDate,slot:selSlot,intent:intentVal||''});
       renderCal();
       showConfirmScreen(name, email, ds, code, true);
     })
@@ -508,7 +548,7 @@ function resetAll(){
   setStep(1); renderCal(); window.scrollTo({top:0,behavior:'smooth'});
 }
 
-renderCal();
+loadBooked();
 </script>
 </body>
 </html>
