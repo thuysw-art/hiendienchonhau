@@ -289,7 +289,8 @@ const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxt90XHmDLVF1wSko-GJp
 const BOOKED = new Set([
   '2026-04-01','2026-04-03','2026-04-06','2026-04-08','2026-04-10',
   '2026-04-13','2026-04-15','2026-04-17','2026-04-20','2026-04-22',
-  '2026-04-24','2026-04-27','2026-04-29','2026-05-06',
+  '2026-04-24','2026-04-27','2026-04-29',
+  '2026-05-01','2026-05-04','2026-05-06',
 ]);
 
 const BOOKINGS = {};
@@ -340,10 +341,18 @@ function genCode(){
 function pad(n){ return n<10?'0'+n:n; }
 function toKey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 
+const MAY2026 = new Date(2026, 4, 1);
+
 function isOpen(date){
   const today = new Date(); today.setHours(0,0,0,0);
   if(date<today||date<START) return false;
-  if(![1,3,5].includes(date.getDay())) return false;
+  // Từ tháng 5/2026: mở T2-T6
+  if(date>=MAY2026){
+    if([0,6].includes(date.getDay())) return false;
+  } else {
+    // Tháng 4: chỉ T2, T4, T6
+    if(![1,3,5].includes(date.getDay())) return false;
+  }
   return !BOOKED.has(toKey(date));
 }
 
