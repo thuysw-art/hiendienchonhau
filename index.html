@@ -414,7 +414,7 @@ function renderCal(){
     const key=toKey(date);
     const past=date<today||date<START;
     const open=isOpen(date);
-    const booked=!open&&!past&&[1,3,5].includes(date.getDay())&&date>=START;
+    const booked=!open&&!past&&date>=START&&!date<today;
     const sel=selDate===key;
     let cls='day-cell'+(past?' past':sel?' selected':open?' has-slot':booked?' full':'');
     const click=open?'onclick="pick(\''+key+'\')"':'';
