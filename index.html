@@ -16,30 +16,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Be Vietnam Pro', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
 
-  /* ── NAV ── */
-  .site-nav {
-    background: var(--green);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 1.5rem; height: 52px;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 1px 12px rgba(0,0,0,0.15);
-  }
-  .nav-logo {
-    font-family: 'Lora', serif; font-size: 1rem; color: white;
-    opacity: 0.9; letter-spacing: 0.01em; font-style: italic;
-    cursor: pointer;
-  }
-  .nav-links { display: flex; gap: 4px; }
-  .nav-link {
-    background: transparent; border: none; padding: 6px 14px;
-    font-family: 'Be Vietnam Pro', sans-serif; font-size: 13px;
-    color: rgba(255,255,255,0.75); border-radius: 8px;
-    cursor: pointer; transition: all 0.15s;
-  }
-  .nav-link:hover { background: rgba(255,255,255,0.1); color: white; }
-  .nav-link.active { background: rgba(255,255,255,0.18); color: white; font-weight: 500; }
-
-  /* ── HERO ── */
   .hero { background: var(--green); color: white; padding: 3.5rem 1.5rem 3rem; text-align: center; position: relative; overflow: hidden; }
   .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 60%, rgba(82,183,136,0.25) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(82,183,136,0.15) 0%, transparent 50%); pointer-events: none; }
   .hero-leaf { font-size: 2rem; margin-bottom: 1rem; display: block; opacity: 0.85; }
@@ -50,7 +26,6 @@
 
   .main { max-width: 560px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
 
-  /* ── SCREENS ── */
   .landing-screen { animation: fadeUp 0.3s ease; }
   .landing-btns { display: grid; gap: 14px; }
   .landing-btn { display: flex; align-items: center; gap: 16px; padding: 1.25rem 1.5rem; border: 1.5px solid var(--border); background: white; border-radius: 14px; cursor: pointer; transition: all 0.2s; text-align: left; font-family: 'Be Vietnam Pro', sans-serif; box-shadow: 0 2px 12px rgba(45,106,79,0.05); }
@@ -152,96 +127,6 @@
 
   .legend { display: flex; gap: 16px; font-size: 12px; color: var(--text-muted); margin-bottom: 1rem; flex-wrap: wrap; }
   .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: middle; }
-
-  /* ── BLOG ── */
-  .blog-screen { animation: fadeUp 0.3s ease; }
-  .blog-header { margin-bottom: 2rem; }
-  .blog-header-title { font-family: 'Lora', serif; font-size: 1.5rem; font-weight: 400; color: var(--green); margin-bottom: 0.4rem; }
-  .blog-header-sub { font-size: 13px; color: var(--text-muted); font-style: italic; line-height: 1.7; }
-
-  .blog-featured {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 1.25rem;
-    box-shadow: 0 2px 20px rgba(45,106,79,0.05);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .blog-featured:hover { border-color: var(--green-light); box-shadow: 0 4px 24px rgba(45,106,79,0.1); }
-  .blog-featured-banner {
-    background: var(--green);
-    height: 130px;
-    display: flex; align-items: center; justify-content: center;
-    position: relative; overflow: hidden;
-  }
-  .blog-featured-banner::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 30% 60%, rgba(82,183,136,0.3) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 20%, rgba(82,183,136,0.2) 0%, transparent 50%);
-  }
-  .blog-featured-emoji { font-size: 3rem; position: relative; z-index: 1; }
-  .blog-featured-body { padding: 1.25rem 1.5rem 1.5rem; }
-  .blog-tag { display: inline-block; background: var(--green-pale); color: var(--green); font-size: 11px; font-weight: 500; letter-spacing: 0.04em; border-radius: 100px; padding: 3px 10px; margin-bottom: 0.6rem; }
-  .blog-featured-title { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 400; color: var(--text); line-height: 1.45; margin-bottom: 0.5rem; }
-  .blog-featured-excerpt { font-size: 13px; color: var(--text-muted); line-height: 1.75; margin-bottom: 0.9rem; }
-  .blog-meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-muted); }
-  .blog-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--green-soft); }
-  .blog-read-more { font-size: 12px; color: var(--green); font-weight: 500; margin-left: auto; }
-
-  .blog-grid { display: grid; gap: 12px; }
-  .blog-card {
-    background: white; border: 1px solid var(--border); border-radius: 14px;
-    padding: 1.25rem 1.5rem;
-    display: flex; gap: 1rem; align-items: flex-start;
-    cursor: pointer; transition: all 0.2s;
-    box-shadow: 0 2px 12px rgba(45,106,79,0.04);
-  }
-  .blog-card:hover { border-color: var(--green-light); background: var(--green-pale); }
-  .blog-card-icon {
-    width: 44px; height: 44px; border-radius: 10px;
-    background: var(--green-pale);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem; flex-shrink: 0;
-    transition: background 0.2s;
-  }
-  .blog-card:hover .blog-card-icon { background: var(--green-soft); }
-  .blog-card-content { flex: 1; min-width: 0; }
-  .blog-card-title { font-family: 'Lora', serif; font-size: 0.95rem; font-weight: 400; color: var(--text); line-height: 1.4; margin-bottom: 4px; }
-  .blog-card-excerpt { font-size: 12px; color: var(--text-muted); line-height: 1.65; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .blog-card-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 8px; }
-
-  /* ── BLOG POST (single) ── */
-  .blog-post-screen { animation: fadeUp 0.25s ease; }
-  .blog-post-back { display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: 9px 18px; font-size: 13px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; margin-bottom: 1.5rem; }
-  .blog-post-back:hover { border-color: var(--green-light); color: var(--green); }
-  .blog-post-header { margin-bottom: 1.5rem; }
-  .blog-post-title { font-family: 'Lora', serif; font-size: clamp(1.3rem, 4vw, 1.7rem); font-weight: 400; color: var(--text); line-height: 1.35; margin-bottom: 0.75rem; }
-  .blog-post-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .blog-post-divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
-  .blog-post-body { font-size: 15px; line-height: 1.9; color: var(--text); }
-  .blog-post-body p { margin-bottom: 1.25rem; }
-  .blog-post-body em { color: var(--green); font-family: 'Lora', serif; }
-  .blog-post-body blockquote {
-    border-left: 3px solid var(--green-soft);
-    margin: 1.5rem 0;
-    padding: 0.75rem 1.25rem;
-    background: var(--green-pale);
-    border-radius: 0 10px 10px 0;
-    font-family: 'Lora', serif;
-    font-style: italic;
-    font-size: 15px;
-    color: var(--green);
-    line-height: 1.8;
-  }
-  .blog-post-body h3 { font-family: 'Lora', serif; font-size: 1.1rem; font-weight: 400; color: var(--green); margin: 1.75rem 0 0.6rem; }
-  .blog-post-footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
-  .blog-post-footer-note { font-size: 13px; color: var(--text-muted); line-height: 1.7; font-style: italic; text-align: center; margin-bottom: 1.25rem; }
-  .btn-book-inline { display: block; width: 100%; padding: 13px; background: var(--green); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 500; font-family: 'Be Vietnam Pro', sans-serif; cursor: pointer; transition: background 0.2s; text-align: center; }
-  .btn-book-inline:hover { background: #1B4D38; }
-
   .footer { text-align: center; padding: 2rem 1.5rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); line-height: 2; }
   .footer a { color: var(--green); text-decoration: none; }
   .footer a:hover { text-decoration: underline; }
@@ -250,16 +135,7 @@
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="site-nav">
-  <div class="nav-logo" onclick="goLanding()">🌿 Hiện Diện Cho Nhau</div>
-  <div class="nav-links">
-    <button class="nav-link active" id="nav-home" onclick="goLanding()">Trang chủ</button>
-    <button class="nav-link" id="nav-blog" onclick="goBlog()">Blog</button>
-  </div>
-</nav>
-
-<div class="hero" id="hero-section">
+<div class="hero">
   <span class="hero-leaf">🌿</span>
   <h1>Hiện Diện Cho Nhau</h1>
   <p class="hero-sub">Một buổi lắng nghe. Bảo mật. Không phán xét. Chỉ có mặt.</p>
@@ -271,7 +147,6 @@
 
 <div class="main">
 
-  <!-- LANDING -->
   <div id="screen-landing" class="landing-screen">
     <p style="font-family:'Lora',serif;font-size:1rem;color:var(--text-muted);text-align:center;line-height:1.8;font-style:italic;margin-bottom:2rem;padding:0 0.5rem;">Dù câu chuyện bạn đang mang là gì, nó xứng đáng được đón nhận với sự cởi mở, kiên nhẫn và chấp nhận.</p>
     <div class="landing-btns">
@@ -287,22 +162,10 @@
           <div class="lb-desc">Chọn ngày giờ và điền thông tin để đặt buổi lắng nghe</div>
         </div>
       </button>
-      <button class="landing-btn" onclick="goBlog()">
-        <div class="lb-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 20h9" stroke-linecap="round"/>
-            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div>
-          <div class="lb-title">Blog · Góc suy nghĩ</div>
-          <div class="lb-desc">Những chia sẻ về lắng nghe, cảm xúc và sự hiện diện</div>
-        </div>
-      </button>
+
     </div>
   </div>
 
-  <!-- LOOKUP -->
   <div id="screen-lookup" class="lookup-screen hidden">
     <button class="btn-back" onclick="goLanding()">&#8592; Quay lại</button>
     <div class="lookup-card">
@@ -318,7 +181,6 @@
     </div>
   </div>
 
-  <!-- BOOKING -->
   <div id="screen-booking" class="hidden">
     <div class="steps">
       <div class="step active" id="step1"><div class="step-dot">1</div> Chọn lịch</div>
@@ -400,67 +262,7 @@
     </div>
   </div>
 
-  <!-- BLOG LIST -->
-  <div id="screen-blog" class="blog-screen hidden">
-    <div class="blog-header">
-      <div class="blog-header-title">Góc suy nghĩ 🌿</div>
-      <div class="blog-header-sub">Những ghi chép nhỏ về lắng nghe, về cảm xúc, và về việc có mặt cho nhau.</div>
-    </div>
-
-    <!-- Featured post -->
-    <div class="blog-featured" onclick="openPost(0)">
-      <div class="blog-featured-banner">
-        <span class="blog-featured-emoji">🌊</span>
-      </div>
-      <div class="blog-featured-body">
-        <span class="blog-tag">Lắng nghe</span>
-        <div class="blog-featured-title">Khi im lặng cũng là một cách nói</div>
-        <div class="blog-featured-excerpt">Có những lúc mình ngồi với người đối diện, không nói gì cả. Không phải vì không biết nói gì, mà vì mình cảm thấy rằng bất cứ điều gì nói ra lúc này đều sẽ là thừa...</div>
-        <div class="blog-meta">
-          <span>Tháng 4, 2026</span>
-          <div class="blog-meta-dot"></div>
-          <span>5 phút đọc</span>
-          <span class="blog-read-more">Đọc tiếp →</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Other posts -->
-    <div class="blog-grid">
-      <div class="blog-card" onclick="openPost(1)">
-        <div class="blog-card-icon">🪞</div>
-        <div class="blog-card-content">
-          <div class="blog-card-title">Bạn không cần "giải quyết" cảm xúc của tôi</div>
-          <div class="blog-card-excerpt">Điều tôi cần không phải là lời khuyên. Tôi chỉ cần bạn ở đây, cùng tôi ngồi trong khoảnh khắc này.</div>
-          <div class="blog-card-meta"><span>Tháng 3, 2026</span><span>·</span><span>4 phút đọc</span></div>
-        </div>
-      </div>
-      <div class="blog-card" onclick="openPost(2)">
-        <div class="blog-card-icon">🌱</div>
-        <div class="blog-card-content">
-          <div class="blog-card-title">Hiện diện không phải là không làm gì</div>
-          <div class="blog-card-excerpt">Nhiều người nghĩ lắng nghe là thụ động. Nhưng thực ra, giữ được sự hiện diện trọn vẹn đòi hỏi rất nhiều nội lực.</div>
-          <div class="blog-card-meta"><span>Tháng 2, 2026</span><span>·</span><span>3 phút đọc</span></div>
-        </div>
-      </div>
-      <div class="blog-card" onclick="openPost(3)">
-        <div class="blog-card-icon">🕯️</div>
-        <div class="blog-card-content">
-          <div class="blog-card-title">Về những cuộc trò chuyện không bao giờ xảy ra</div>
-          <div class="blog-card-excerpt">Có bao nhiêu điều chúng ta muốn nói, nhưng chưa bao giờ tìm được đúng người, đúng thời điểm để chia sẻ?</div>
-          <div class="blog-card-meta"><span>Tháng 1, 2026</span><span>·</span><span>6 phút đọc</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- BLOG POST (single view) -->
-  <div id="screen-post" class="blog-post-screen hidden">
-    <button class="blog-post-back" onclick="closPost()">&#8592; Quay lại blog</button>
-    <div id="post-content"></div>
-  </div>
-
-</div><!-- end .main -->
+</div>
 
 <div class="footer">
   Dự án <strong>Hiện Diện Cho Nhau</strong> — để mọi cảm xúc và trải nghiệm của bạn được chăm sóc.<br>
@@ -477,191 +279,23 @@
   el.innerHTML = '<a href="mai' + 'lto:' + a + '@' + b + '">' + a + '@' + b + '</a>';
 })();
 
-/* ── BLOG DATA ── */
-const POSTS = [
-  {
-    emoji: '🌊',
-    tag: 'Lắng nghe',
-    title: 'Khi im lặng cũng là một cách nói',
-    date: 'Tháng 4, 2026',
-    readTime: '5 phút đọc',
-    body: `
-      <p>Có những lúc mình ngồi với người đối diện, không nói gì cả. Không phải vì không biết nói gì, mà vì mình cảm thấy rằng bất cứ điều gì nói ra lúc này đều sẽ là thừa.</p>
-      <blockquote>Sự im lặng không phải là khoảng trống. Đó là không gian mà người kia có thể thở.</blockquote>
-      <p>Chúng ta thường sợ im lặng. Khi trò chuyện dừng lại, bản năng của nhiều người là lấp đầy khoảng trống đó — bằng lời khuyên, bằng câu hỏi, bằng những câu "Ừ, tôi hiểu". Nhưng đôi khi, người đang chia sẻ với bạn không cần lời bạn. Họ chỉ cần sự <em>có mặt</em> của bạn.</p>
-      <h3>Im lặng như một hành động</h3>
-      <p>Giữ được sự im lặng không phải là thụ động. Đó là một lựa chọn có ý thức: mình sẽ không ngắt, không sửa, không dẫn hướng. Mình sẽ chỉ ở đây, cùng bạn, trong khoảnh khắc này.</p>
-      <p>Khi tập lắng nghe, điều đầu tiên mình học được không phải là phải nói gì, mà là học cách <em>chịu đựng sự im lặng</em> mà không cảm thấy lo lắng. Bởi vì sự lo lắng đó thường là của mình, không phải của người đối diện.</p>
-      <h3>Thử một lần</h3>
-      <p>Lần tới khi ai đó chia sẻ điều gì đó nặng nề với bạn, hãy thử: không vội vàng nói gì. Chỉ gật đầu. Chỉ nhìn vào mắt họ. Chỉ thở. Bạn sẽ thấy rằng đôi khi, chính sự im lặng của bạn mới là điều họ cần nhất.</p>
-    `
-  },
-  {
-    emoji: '🪞',
-    tag: 'Cảm xúc',
-    title: 'Bạn không cần "giải quyết" cảm xúc của tôi',
-    date: 'Tháng 3, 2026',
-    readTime: '4 phút đọc',
-    body: `
-      <p>Mỗi lần mình chia sẻ điều gì đó khó khăn với ai, điều mình sợ nhất không phải là bị phán xét. Mình sợ nhất là nhận được lời khuyên trước khi mình kịp nói hết câu chuyện.</p>
-      <blockquote>Cảm xúc không phải là bài toán cần lời giải. Đôi khi chúng chỉ cần được nhìn nhận.</blockquote>
-      <p>Có một sự khác biệt lớn giữa <em>cảm thấy được nghe</em> và <em>cảm thấy được tư vấn</em>. Cả hai đều xuất phát từ thiện chí, nhưng tác động lại hoàn toàn khác nhau.</p>
-      <h3>Khi lời khuyên trở thành gánh nặng</h3>
-      <p>Khi bạn đưa ra giải pháp quá nhanh, bạn đang vô tình gửi đi một thông điệp: "Vấn đề của bạn cần được sửa". Nhưng nhiều khi, người chia sẻ không nghĩ rằng họ đang có "vấn đề". Họ chỉ đang mang theo một cảm xúc nặng và cần một người cùng ngồi với nó.</p>
-      <p>Điều tôi cần không phải là lời khuyên. Tôi chỉ cần bạn ở đây, cùng tôi ngồi trong khoảnh khắc này, không cố gắng làm cho nó biến đi.</p>
-    `
-  },
-  {
-    emoji: '🌱',
-    tag: 'Hiện diện',
-    title: 'Hiện diện không phải là không làm gì',
-    date: 'Tháng 2, 2026',
-    readTime: '3 phút đọc',
-    body: `
-      <p>Nhiều người nghĩ rằng lắng nghe là thụ động — bạn chỉ ngồi yên, để người kia nói, và đó là tất cả. Nhưng thực ra, giữ được sự hiện diện trọn vẹn trong suốt một cuộc trò chuyện đòi hỏi rất nhiều nội lực.</p>
-      <blockquote>Hiện diện là chọn ở lại trong khoảnh khắc này, ngay cả khi tâm trí muốn đi nơi khác.</blockquote>
-      <p>Trong khi người kia đang nói, tâm trí mình liên tục bị kéo đi — bởi những suy nghĩ về việc phải trả lời gì, bởi những liên tưởng đến câu chuyện của mình, bởi điện thoại vừa rung nhẹ trong túi.</p>
-      <h3>Lựa chọn có ý thức</h3>
-      <p>Hiện diện thực sự là một lựa chọn liên tục, không phải một trạng thái tự nhiên. Mỗi khi tâm trí trôi đi, bạn phải nhẹ nhàng kéo nó trở lại. Không phán xét bản thân. Chỉ trở lại.</p>
-      <p>Đó là lý do vì sao mỗi buổi lắng nghe với mình cũng là một lần tập. Tập nhận ra khi nào mình đang thực sự ở đây, và khi nào mình chỉ đang <em>giả vờ</em> ở đây.</p>
-    `
-  },
-  {
-    emoji: '🕯️',
-    tag: 'Suy nghĩ',
-    title: 'Về những cuộc trò chuyện không bao giờ xảy ra',
-    date: 'Tháng 1, 2026',
-    readTime: '6 phút đọc',
-    body: `
-      <p>Có bao nhiêu điều chúng ta muốn nói, nhưng chưa bao giờ tìm được đúng người, đúng thời điểm để chia sẻ?</p>
-      <p>Mình từng có một giai đoạn rất khó khăn, và mình biết rằng mình cần nói chuyện với ai đó. Nhưng mỗi lần định mở miệng, mình lại nghĩ: "Họ đang bận. Chuyện này không đáng. Mình sẽ ổn thôi."</p>
-      <blockquote>Câu chuyện không được kể không có nghĩa là nó không tồn tại. Nó chỉ đang chờ đợi, im lặng, bên trong bạn.</blockquote>
-      <h3>Tại sao chúng ta không nói?</h3>
-      <p>Có nhiều lý do. Sợ làm phiền. Sợ không được hiểu. Sợ rằng một khi nói ra, nó sẽ trở nên "thật" hơn và khó kiểm soát hơn. Và đôi khi, đơn giản là không biết bắt đầu từ đâu.</p>
-      <p>Dự án <em>Hiện Diện Cho Nhau</em> bắt đầu từ chính những khoảnh khắc đó — những lần mình ước có ai đó chỉ đơn giản là ngồi xuống và nói: "Mình ở đây. Bạn có thể nói."</p>
-      <h3>Bắt đầu từ đâu cũng được</h3>
-      <p>Bạn không cần phải có câu chuyện hoàn chỉnh. Bạn không cần biết mình muốn gì từ cuộc trò chuyện. Bạn chỉ cần bước vào, và cứ để nó diễn ra tự nhiên. Đó là tất cả những gì cần thiết.</p>
-    `
-  }
-];
-
-function openPost(idx) {
-  const post = POSTS[idx];
-  document.getElementById('post-content').innerHTML = `
-    <div class="blog-post-header">
-      <span class="blog-tag">${post.tag}</span>
-      <div class="blog-post-title">${post.post_emoji || post.emoji} ${post.title}</div>
-      <div class="blog-post-meta">
-        <span>${post.date}</span>
-        <div class="blog-meta-dot" style="width:3px;height:3px;border-radius:50%;background:var(--green-soft);display:inline-block"></div>
-        <span>${post.readTime}</span>
-      </div>
-    </div>
-    <hr class="blog-post-divider">
-    <div class="blog-post-body">${post.body}</div>
-    <div class="blog-post-footer">
-      <div class="blog-post-footer-note">Nếu bài viết này chạm đến điều gì trong bạn, hãy để mình được lắng nghe trực tiếp nhé. 🌿</div>
-      <button class="btn-book-inline" onclick="goBook()">Đặt một buổi lắng nghe →</button>
-    </div>
-  `;
-  hide('screen-blog');
-  show('screen-post');
-  setActiveNav('blog');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function closPost() {
-  hide('screen-post');
-  show('screen-blog');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-/* ── NAV HELPERS ── */
-function setActiveNav(active) {
-  document.getElementById('nav-home').classList.toggle('active', active === 'home');
-  document.getElementById('nav-blog').classList.toggle('active', active === 'blog');
-}
-
-function hideAll() {
-  ['screen-landing','screen-lookup','screen-booking','screen-blog','screen-post'].forEach(hide);
-}
-
-/* ── NAVIGATION ── */
-function goLanding() {
-  hideAll();
-  show('screen-landing');
-  document.getElementById('hero-section').style.display = '';
-  setActiveNav('home');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function goBlog() {
-  hideAll();
-  show('screen-blog');
-  document.getElementById('hero-section').style.display = 'none';
-  setActiveNav('blog');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function goBook() {
-  hideAll();
-  document.getElementById('hero-section').style.display = '';
-  show('screen-booking');
-  show('screen-cal'); hide('screen-form'); hide('screen-confirm');
-  setStep(1); setActiveNav('home');
-  renderCal(); window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function goLookup() {
-  hideAll();
-  document.getElementById('hero-section').style.display = '';
-  show('screen-lookup');
-  document.getElementById('lookup-code').value='';
-  document.getElementById('lookup-error').classList.remove('show');
-  document.getElementById('lookup-result').classList.remove('show');
-  setActiveNav('home');
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-function backToCal() {
-  hide('screen-form'); show('screen-cal'); setStep(1);
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-/* ── LOOKUP ── */
-function doLookup(){
-  const code = document.getElementById('lookup-code').value.trim().toUpperCase();
-  const errEl = document.getElementById('lookup-error');
-  const resEl = document.getElementById('lookup-result');
-  errEl.classList.remove('show'); resEl.classList.remove('show');
-  if(!code){ errEl.classList.add('show'); return; }
-  const b = BOOKINGS[code];
-  if(!b){ errEl.classList.add('show'); return; }
-  const p = b.date.split('-');
-  const ds = parseInt(p[2])+'/'+parseInt(p[1])+'/'+p[0];
-  resEl.innerHTML =
-    '<div style="font-weight:500;margin-bottom:6px;">Lịch hẹn của bạn 🌿</div>'+
-    '<div><span style="color:var(--text-muted);display:inline-block;min-width:60px;font-size:12px;">Mã</span> '+code+'</div>'+
-    '<div><span style="color:var(--text-muted);display:inline-block;min-width:60px;font-size:12px;">Tên</span> '+b.name+'</div>'+
-    '<div><span style="color:var(--text-muted);display:inline-block;min-width:60px;font-size:12px;">Ngày</span> '+ds+' · '+b.slot+'</div>'+
-    '<div style="margin-top:10px;font-size:12px;color:var(--text-muted);">Nếu bạn muốn đổi lịch, vui lòng liên hệ mình qua email nhé.</div>';
-  resEl.classList.add('show');
-}
-
-/* ── CALENDAR ── */
 const DAYS_VN = ['CN','T2','T3','T4','T5','T6','T7'];
 const MONTHS_VN = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
 const SLOTS = ['09:00','10:00','14:00','15:00','16:00','19:00'];
 const START = new Date(2026, 3, 1);
+
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwv1miu5d85FYK1ohyM9z18yxuyJnUwBFIujQKLp4A-ATwqOHZDaHc7y1jfzsRVc0Uu/exec';
+
 const BOOKED = new Set([
   '2026-04-01','2026-04-03','2026-04-06','2026-04-08','2026-04-10',
   '2026-04-13','2026-04-15','2026-04-17','2026-04-20','2026-04-22',
   '2026-04-24','2026-04-27','2026-04-29',
   '2026-05-01','2026-05-04','2026-05-06',
 ]);
+
 const BOOKINGS = {};
 
+// Load booked dates from Google Sheets on page load
 async function loadBooked(){
   try {
     const res = await fetch(SHEET_URL);
@@ -687,11 +321,14 @@ async function saveToSheet(booking){
       'entry.1297781007': booking.intent
     });
     await fetch(FORM_URL, {
-      method: 'POST', mode: 'no-cors',
+      method: 'POST',
+      mode: 'no-cors',
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: params.toString()
     });
-  } catch(e) { console.warn('Không lưu được lên sheet:', e); }
+  } catch(e) {
+    console.warn('Không lưu được lên sheet:', e);
+  }
 }
 
 function genCode(){
@@ -705,11 +342,17 @@ function pad(n){ return n<10?'0'+n:n; }
 function toKey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
 
 const MAY2026 = new Date(2026, 4, 1);
+
 function isOpen(date){
   const today = new Date(); today.setHours(0,0,0,0);
   if(date<today||date<START) return false;
-  if(date>=MAY2026){ if([0,6].includes(date.getDay())) return false; }
-  else { if(![1,3,5].includes(date.getDay())) return false; }
+  // Từ tháng 5/2026: mở T2-T6
+  if(date>=MAY2026){
+    if([0,6].includes(date.getDay())) return false;
+  } else {
+    // Tháng 4: chỉ T2, T4, T6
+    if(![1,3,5].includes(date.getDay())) return false;
+  }
   return !BOOKED.has(toKey(date));
 }
 
@@ -717,6 +360,46 @@ let cy=2026, cm=3, selDate=null, selSlot=null;
 
 function show(id){ document.getElementById(id).classList.remove('hidden'); }
 function hide(id){ document.getElementById(id).classList.add('hidden'); }
+
+function goLanding(){
+  hide('screen-lookup'); hide('screen-booking'); show('screen-landing');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goBook(){
+  hide('screen-landing'); hide('screen-lookup'); show('screen-booking');
+  show('screen-cal'); hide('screen-form'); hide('screen-confirm');
+  setStep(1); renderCal(); window.scrollTo({top:0,behavior:'smooth'});
+}
+function goLookup(){
+  hide('screen-landing'); hide('screen-booking'); show('screen-lookup');
+  document.getElementById('lookup-code').value='';
+  document.getElementById('lookup-error').classList.remove('show');
+  document.getElementById('lookup-result').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function backToCal(){
+  hide('screen-form'); show('screen-cal'); setStep(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function doLookup(){
+  const code = document.getElementById('lookup-code').value.trim().toUpperCase();
+  const errEl = document.getElementById('lookup-error');
+  const resEl = document.getElementById('lookup-result');
+  errEl.classList.remove('show'); resEl.classList.remove('show');
+  if(!code){ errEl.classList.add('show'); return; }
+  const b = BOOKINGS[code];
+  if(!b){ errEl.classList.add('show'); return; }
+  const p = b.date.split('-');
+  const ds = parseInt(p[2])+'/'+parseInt(p[1])+'/'+p[0];
+  resEl.innerHTML =
+    '<div style="font-weight:500;margin-bottom:6px;">Lịch hẹn của bạn 🌿</div>'+
+    '<div><span style="color:var(--text-muted);display:inline-block;min-width:60px;font-size:12px;">Mã</span> '+code+'</div>'+
+    '<div><span style="color:var(--text-muted);display:inline-block;min-width:60px;font-size:12px;">Tên</span> '+b.name+'</div>'+
+    '<div><span style="color:var(--text-muted);display:inline-block;min-width:60px;font-size:12px;">Ngày</span> '+ds+' · '+b.slot+'</div>'+
+    '<div style="margin-top:10px;font-size:12px;color:var(--text-muted);">Nếu bạn muốn đổi lịch, vui lòng liên hệ mình qua email nhé.</div>';
+  resEl.classList.add('show');
+}
 
 function renderCal(){
   document.getElementById('cal-title').textContent = MONTHS_VN[cm]+' '+cy;
@@ -763,6 +446,7 @@ function toForm(){
 }
 
 let intentVal=null;
+
 function setIntent(val){
   intentVal=val;
   document.getElementById('intent-yes').classList.toggle('selected',val==='yes');
@@ -774,34 +458,50 @@ function submitForm(){
   const name=document.getElementById('f-name').value.trim();
   const email=document.getElementById('f-email').value.trim();
   if(!name||!email){alert('Vui lòng điền tên và email nhé.');return;}
+
   const submitBtn = document.querySelector('.btn-submit');
-  submitBtn.disabled = true; submitBtn.textContent = 'Đang gửi...';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Đang gửi...';
+
   const p=selDate.split('-');
   const ds=parseInt(p[2])+'/'+parseInt(p[1])+'/'+p[0];
-  let code; do{ code=genCode(); }while(BOOKINGS[code]);
+
+  let code;
+  do{ code=genCode(); }while(BOOKINGS[code]);
+
   const intentText = intentVal==='yes' ? 'Dự định đóng góp' : 'Miễn phí lần này';
+
   const templateParams = {
-    to_name: name, to_email: email,
-    booking_date: ds, booking_time: selSlot,
-    booking_code: code, intent: intentText,
+    to_name: name,
+    to_email: email,
+    booking_date: ds,
+    booking_time: selSlot,
+    booking_code: code,
+    intent: intentText,
     reply_to: 'thuysw@gmail.com'
   };
+
   emailjs.send('service_sz7t5we', 'template_elidj2x', templateParams)
     .then(async function(){
+      // Email gửi thành công — lưu lên Sheet và cập nhật lịch
       BOOKED.add(selDate);
       BOOKINGS[code]={name,email,date:selDate,slot:selSlot,intent:intentVal};
       await saveToSheet({code,name,email,date:selDate,slot:selSlot,intent:intentVal||''});
-      renderCal(); showConfirmScreen(name, email, ds, code);
+      renderCal();
+      showConfirmScreen(name, email, ds, code);
     })
     .catch(function(err){
       console.error('EmailJS error:', err);
+      // Vẫn lưu booking và hiện xác nhận dù email lỗi, thông báo nhẹ cho khách
       BOOKED.add(selDate);
       BOOKINGS[code]={name,email,date:selDate,slot:selSlot,intent:intentVal};
       saveToSheet({code,name,email,date:selDate,slot:selSlot,intent:intentVal||''});
-      renderCal(); showConfirmScreen(name, email, ds, code, true);
+      renderCal();
+      showConfirmScreen(name, email, ds, code, true);
     })
     .finally(function(){
-      submitBtn.disabled = false; submitBtn.textContent = 'Gửi đặt lịch →';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Gửi đặt lịch →';
     });
 }
 
