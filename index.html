@@ -93,6 +93,15 @@
   .field input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text); background: var(--cream); outline: none; transition: border-color 0.15s; }
   .field input:focus { border-color: var(--green-light); background: white; }
   .field input::placeholder { color: #B0BDB9; }
+
+  /* Contact type toggle */
+  .contact-type-wrap { margin-bottom: 0.75rem; }
+  .contact-type-btns { display: flex; gap: 8px; margin-bottom: 10px; }
+  .contact-type-btn { flex: 1; padding: 8px 6px; border: 1px solid var(--border); background: transparent; border-radius: 8px; font-size: 13px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; }
+  .contact-type-btn:hover { border-color: var(--green-light); color: var(--green); }
+  .contact-type-btn.selected { border-color: var(--green); background: var(--green-pale); color: var(--green); font-weight: 500; }
+  .contact-hint { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px; font-style: italic; }
+
   .mindful-note { background: var(--green-pale); border-radius: 12px; padding: 14px 16px; margin-bottom: 1rem; font-size: 13px; color: var(--green); line-height: 1.8; font-style: italic; }
   .intent-wrap { margin-bottom: 1rem; }
   .intent-wrap label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.02em; text-transform: uppercase; }
@@ -162,7 +171,6 @@
           <div class="lb-desc">Chọn ngày giờ và điền thông tin để đặt buổi lắng nghe</div>
         </div>
       </button>
-
     </div>
   </div>
 
@@ -224,6 +232,24 @@
           <label>Email</label>
           <input type="email" id="f-email" placeholder="Để mình xác nhận lịch">
         </div>
+
+        <!-- Facebook / Zalo field -->
+        <div class="field">
+          <label>Facebook hoặc Zalo <span style="font-weight:400;text-transform:none;font-size:11px;color:#9ab">(để mình gửi link hẹn)</span></label>
+          <div class="contact-type-wrap">
+            <div class="contact-type-btns">
+              <button type="button" class="contact-type-btn selected" id="ctype-zalo" onclick="setContactType('zalo')">
+                📱 Zalo
+              </button>
+              <button type="button" class="contact-type-btn" id="ctype-fb" onclick="setContactType('facebook')">
+                💬 Facebook
+              </button>
+            </div>
+          </div>
+          <div class="contact-hint" id="contact-hint">Nhập số điện thoại dùng Zalo của bạn</div>
+          <input type="text" id="f-contact" placeholder="0912 345 678">
+        </div>
+
         <div class="mindful-note">🌿 Hiện diện cho nhau cần sự yên tĩnh, riêng tư và chú tâm. Rất mong bạn sẽ tạo được cho mình một không gian và thời gian như vậy để sự hiện diện được trọn vẹn.</div>
         <div class="intent-wrap">
           <label>Đóng góp</label>
@@ -295,7 +321,6 @@ const BOOKED = new Set([
 
 const BOOKINGS = {};
 
-// Load booked dates from Google Sheets on page load
 async function loadBooked(){
   try {
     const res = await fetch(SHEET_URL);
@@ -318,7 +343,8 @@ async function saveToSheet(booking){
       'entry.2071255051': booking.email,
       'entry.1542614496': booking.date,
       'entry.983442579': booking.slot,
-      'entry.1297781007': booking.intent
+      'entry.1297781007': booking.intent,
+      'entry.2082503039': booking.contact   // Facebook / Zalo
     });
     await fetch(FORM_URL, {
       method: 'POST',
@@ -346,20 +372,36 @@ const MAY2026 = new Date(2026, 4, 1);
 function isOpen(date){
   const today = new Date(); today.setHours(0,0,0,0);
   if(date<today||date<START) return false;
-  // Từ tháng 5/2026: mở T2-T6
   if(date>=MAY2026){
     if([0,6].includes(date.getDay())) return false;
   } else {
-    // Tháng 4: chỉ T2, T4, T6
     if(![1,3,5].includes(date.getDay())) return false;
   }
   return !BOOKED.has(toKey(date));
 }
 
 let cy=2026, cm=3, selDate=null, selSlot=null;
+let contactType = 'zalo';
 
 function show(id){ document.getElementById(id).classList.remove('hidden'); }
 function hide(id){ document.getElementById(id).classList.add('hidden'); }
+
+function setContactType(type){
+  contactType = type;
+  document.getElementById('ctype-zalo').classList.toggle('selected', type==='zalo');
+  document.getElementById('ctype-fb').classList.toggle('selected', type==='facebook');
+  const hint = document.getElementById('contact-hint');
+  const input = document.getElementById('f-contact');
+  if(type === 'zalo'){
+    hint.textContent = 'Nhập số điện thoại dùng Zalo của bạn';
+    input.placeholder = '0912 345 678';
+    input.type = 'tel';
+  } else {
+    hint.textContent = 'Nhập link hoặc tên Facebook của bạn';
+    input.placeholder = 'facebook.com/ten-cua-ban';
+    input.type = 'text';
+  }
+}
 
 function goLanding(){
   hide('screen-lookup'); hide('screen-booking'); show('screen-landing');
@@ -455,9 +497,11 @@ function setIntent(val){
 }
 
 function submitForm(){
-  const name=document.getElementById('f-name').value.trim();
-  const email=document.getElementById('f-email').value.trim();
+  const name    = document.getElementById('f-name').value.trim();
+  const email   = document.getElementById('f-email').value.trim();
+  const contact = document.getElementById('f-contact').value.trim();
   if(!name||!email){alert('Vui lòng điền tên và email nhé.');return;}
+  if(!contact){alert('Vui lòng cung cấp Facebook hoặc số Zalo để mình gửi link hẹn cho bạn nhé.');return;}
 
   const submitBtn = document.querySelector('.btn-submit');
   submitBtn.disabled = true;
@@ -470,34 +514,34 @@ function submitForm(){
   do{ code=genCode(); }while(BOOKINGS[code]);
 
   const intentText = intentVal==='yes' ? 'Dự định đóng góp' : 'Miễn phí lần này';
+  const contactLabel = contactType === 'zalo' ? 'Zalo: ' + contact : 'Facebook: ' + contact;
 
   const templateParams = {
-    to_name: name,
-    to_email: email,
+    to_name:      name,
+    to_email:     email,
     booking_date: ds,
     booking_time: selSlot,
     booking_code: code,
-    intent: intentText,
-    reply_to: 'thuysw@gmail.com'
+    intent:       intentText,
+    contact:      contactLabel,
+    reply_to:     'thuysw@gmail.com'
   };
 
   emailjs.send('service_sz7t5we', 'template_elidj2x', templateParams)
     .then(async function(){
-      // Email gửi thành công — lưu lên Sheet và cập nhật lịch
       BOOKED.add(selDate);
-      BOOKINGS[code]={name,email,date:selDate,slot:selSlot,intent:intentVal};
-      await saveToSheet({code,name,email,date:selDate,slot:selSlot,intent:intentVal||''});
+      BOOKINGS[code]={name,email,contact:contactLabel,date:selDate,slot:selSlot,intent:intentVal};
+      await saveToSheet({code,name,email,date:selDate,slot:selSlot,intent:intentVal||'',contact:contactLabel});
       renderCal();
-      showConfirmScreen(name, email, ds, code);
+      showConfirmScreen(name, email, contact, ds, code);
     })
     .catch(function(err){
       console.error('EmailJS error:', err);
-      // Vẫn lưu booking và hiện xác nhận dù email lỗi, thông báo nhẹ cho khách
       BOOKED.add(selDate);
-      BOOKINGS[code]={name,email,date:selDate,slot:selSlot,intent:intentVal};
-      saveToSheet({code,name,email,date:selDate,slot:selSlot,intent:intentVal||''});
+      BOOKINGS[code]={name,email,contact:contactLabel,date:selDate,slot:selSlot,intent:intentVal};
+      saveToSheet({code,name,email,date:selDate,slot:selSlot,intent:intentVal||'',contact:contactLabel});
       renderCal();
-      showConfirmScreen(name, email, ds, code, true);
+      showConfirmScreen(name, email, contact, ds, code, true);
     })
     .finally(function(){
       submitBtn.disabled = false;
@@ -505,11 +549,13 @@ function submitForm(){
     });
 }
 
-function showConfirmScreen(name, email, ds, code, emailFailed){
+function showConfirmScreen(name, email, contact, ds, code, emailFailed){
   document.getElementById('booking-code-display').textContent=code;
+  const contactLabel = contactType === 'zalo' ? 'Zalo' : 'Facebook';
   document.getElementById('confirm-detail').innerHTML=
     '<div><span>Tên</span><strong>'+name+'</strong></div>'+
     '<div><span>Email</span><strong>'+email+'</strong></div>'+
+    '<div><span>'+contactLabel+'</span><strong>'+contact+'</strong></div>'+
     '<div><span>Ngày</span><strong>'+ds+' · '+selSlot+'</strong></div>';
   const confirmBank = intentVal==='yes'
     ? '<div style="margin-bottom:1.5rem;background:var(--green-pale);border:1px solid var(--green-soft);border-radius:10px;padding:12px 14px;font-size:13px;line-height:2;color:var(--green);text-align:left;"><div style="font-weight:500;margin-bottom:4px;">Thông tin chuyển khoản</div><div><span style="color:var(--text-muted);min-width:90px;display:inline-block;font-size:12px;">Ngân hàng</span> PVcombank</div><div><span style="color:var(--text-muted);min-width:90px;display:inline-block;font-size:12px;">Số TK</span> 10600056302</div><div><span style="color:var(--text-muted);min-width:90px;display:inline-block;font-size:12px;">Tên</span> Dang Thi Thanh Thuy</div></div>'
@@ -536,11 +582,12 @@ function changeMonth(dir){
 }
 
 function resetAll(){
-  selDate=null; selSlot=null; intentVal=null;
-  ['f-name','f-email'].forEach(id=>document.getElementById(id).value='');
+  selDate=null; selSlot=null; intentVal=null; contactType='zalo';
+  ['f-name','f-email','f-contact'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('intent-yes').classList.remove('selected');
   document.getElementById('intent-no').classList.remove('selected');
   document.getElementById('bank-box').classList.add('hidden');
+  setContactType('zalo');
   hide('screen-confirm'); hide('screen-form'); hide('screen-booking');
   show('screen-landing');
   setStep(1); renderCal(); window.scrollTo({top:0,behavior:'smooth'});
