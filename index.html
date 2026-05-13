@@ -105,11 +105,16 @@
   .mindful-note { background: var(--green-pale); border-radius: 12px; padding: 14px 16px; margin-bottom: 1rem; font-size: 13px; color: var(--green); line-height: 1.8; font-style: italic; }
   .intent-wrap { margin-bottom: 1rem; }
   .intent-wrap label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.02em; text-transform: uppercase; }
-  .intent-reminder { font-size: 12px; color: var(--green); background: var(--green-pale); border-radius: 8px; padding: 7px 12px; margin-bottom: 10px; line-height: 1.6; }
-  .intent-btns { display: flex; gap: 8px; }
-  .intent-btn { flex: 1; padding: 10px 8px; border: 1px solid var(--border); background: transparent; border-radius: 10px; font-size: 13px; font-family: 'Be Vietnam Pro', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; text-align: center; }
-  .intent-btn:hover { border-color: var(--green-light); color: var(--green); }
-  .intent-btn.selected { border-color: var(--green); background: var(--green-pale); color: var(--green); font-weight: 500; }
+  .coffee-story { font-size: 13px; color: var(--text-muted); line-height: 1.8; margin-bottom: 12px; font-style: italic; background: var(--green-pale); border-radius: 10px; padding: 12px 14px; }
+  .coffee-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .coffee-cups { display: flex; gap: 6px; }
+  .coffee-cup-btn { width: 40px; height: 40px; border: 1.5px solid var(--border); background: white; border-radius: 10px; font-size: 20px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
+  .coffee-cup-btn:hover { border-color: var(--green-light); background: var(--green-pale); transform: scale(1.08); }
+  .coffee-cup-btn.selected { border-color: var(--green); background: var(--green-pale); }
+  .coffee-custom { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); }
+  .coffee-custom input { width: 54px; padding: 8px 8px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: 'Be Vietnam Pro', sans-serif; text-align: center; color: var(--text); background: var(--cream); outline: none; transition: border-color 0.15s; }
+  .coffee-custom input:focus { border-color: var(--green-light); background: white; }
+  .coffee-total { font-size: 13px; color: var(--green); font-weight: 500; margin-top: 8px; min-height: 20px; }
   .bank-box { background: var(--green-pale); border: 1px solid var(--green-soft); border-radius: 10px; padding: 12px 14px; margin-top: 10px; font-size: 13px; line-height: 2; color: var(--green); }
   .bank-box span { color: var(--text-muted); display: inline-block; min-width: 90px; font-size: 12px; }
   .form-footer-btns { display: flex; gap: 10px; margin-top: 0.5rem; }
@@ -252,16 +257,26 @@
 
         <div class="mindful-note">🌿 Hiện diện cho nhau cần sự yên tĩnh, riêng tư và chú tâm. Rất mong bạn sẽ tạo được cho mình một không gian và thời gian như vậy để sự hiện diện được trọn vẹn.</div>
         <div class="intent-wrap">
-          <label>Đóng góp</label>
-          <p class="intent-reminder">Dù bạn đóng góp hay không, sự hiện diện của chúng ta vẫn có cùng ý nghĩa.</p>
-          <div class="intent-btns">
-            <button type="button" class="intent-btn" id="intent-yes" onclick="setIntent('yes')">Mình dự định đóng góp</button>
-            <button type="button" class="intent-btn" id="intent-no" onclick="setIntent('no')">Lần này mình chưa thể</button>
+          <label>Mời Thủy cà phê ☕</label>
+          <p class="coffee-story">Dự án Hiện diện cho nhau hoạt động theo mô hình buy me a coffee. Như thể buổi chiều ấy mình ngồi xuống lắng nghe câu chuyện của bạn một cách trọn vẹn và bạn nói "Để mình mời Thủy ly cà phê này". Mỗi ly cà phê 100k, bạn mời Thủy bao nhiêu ly?</p>
+          <div class="coffee-row">
+            <div class="coffee-cups">
+              <button type="button" class="coffee-cup-btn" onclick="setCoffee(1)" id="cup-1" title="1 ly">☕</button>
+              <button type="button" class="coffee-cup-btn" onclick="setCoffee(2)" id="cup-2" title="2 ly">☕☕</button>
+              <button type="button" class="coffee-cup-btn" onclick="setCoffee(3)" id="cup-3" title="3 ly">☕☕☕</button>
+            </div>
+            <div class="coffee-custom">
+              hoặc&nbsp;
+              <input type="number" id="coffee-custom-input" min="0" placeholder="0" oninput="onCoffeeCustom(this.value)">
+              &nbsp;ly
+            </div>
           </div>
-          <div class="bank-box hidden" id="bank-box">
+          <div class="coffee-total" id="coffee-total"></div>
+          <div class="bank-box" id="bank-box" style="margin-top:10px;">
             <div><span>Ngân hàng</span> PVcombank</div>
             <div><span>Số TK</span> 10600056302</div>
             <div><span>Tên</span> Dang Thi Thanh Thuy</div>
+            <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--green-soft);font-size:12px;color:var(--text-muted);">📝 Nội dung CK: <strong style="color:var(--green);">Tên + HDCN</strong></div>
           </div>
         </div>
         <div class="form-footer-btns">
@@ -487,13 +502,32 @@ function toForm(){
   setStep(2); window.scrollTo({top:0,behavior:'smooth'});
 }
 
-let intentVal=null;
+let coffeeCount = 0;
 
-function setIntent(val){
-  intentVal=val;
-  document.getElementById('intent-yes').classList.toggle('selected',val==='yes');
-  document.getElementById('intent-no').classList.toggle('selected',val==='no');
-  document.getElementById('bank-box').classList.toggle('hidden',val!=='yes');
+function setCoffee(n){
+  coffeeCount = n;
+  document.getElementById('coffee-custom-input').value = '';
+  ['cup-1','cup-2','cup-3'].forEach(id => {
+    const cups = parseInt(id.split('-')[1]);
+    document.getElementById(id).classList.toggle('selected', cups === n);
+  });
+  updateCoffeeDisplay();
+}
+
+function onCoffeeCustom(val){
+  const n = parseInt(val) || 0;
+  coffeeCount = n;
+  ['cup-1','cup-2','cup-3'].forEach(id => document.getElementById(id).classList.remove('selected'));
+  updateCoffeeDisplay();
+}
+
+function updateCoffeeDisplay(){
+  const total = document.getElementById('coffee-total');
+  if(coffeeCount > 0){
+    total.textContent = '☕ ' + coffeeCount + ' ly = ' + (coffeeCount * 100).toLocaleString('vi-VN') + '.000đ — Cảm ơn bạn rất nhiều!';
+  } else {
+    total.textContent = '';
+  }
 }
 
 function submitForm(){
@@ -513,7 +547,7 @@ function submitForm(){
   let code;
   do{ code=genCode(); }while(BOOKINGS[code]);
 
-  const intentText = intentVal==='yes' ? 'Dự định đóng góp' : 'Miễn phí lần này';
+  const intentText = coffeeCount > 0 ? coffeeCount + ' ly cà phê (' + (coffeeCount * 100).toLocaleString('vi-VN') + '.000đ)' : 'Chưa mời lần này';
   const contactLabel = contactType === 'zalo' ? 'Zalo: ' + contact : 'Facebook: ' + contact;
 
   const templateParams = {
@@ -557,7 +591,7 @@ function showConfirmScreen(name, email, contact, ds, code, emailFailed){
     '<div><span>Email</span><strong>'+email+'</strong></div>'+
     '<div><span>'+contactLabel+'</span><strong>'+contact+'</strong></div>'+
     '<div><span>Ngày</span><strong>'+ds+' · '+selSlot+'</strong></div>';
-  const confirmBank = intentVal==='yes'
+  const confirmBank = coffeeCount > 0
     ? '<div style="margin-bottom:1.5rem;background:var(--green-pale);border:1px solid var(--green-soft);border-radius:10px;padding:12px 14px;font-size:13px;line-height:2;color:var(--green);text-align:left;"><div style="font-weight:500;margin-bottom:4px;">Thông tin chuyển khoản</div><div><span style="color:var(--text-muted);min-width:90px;display:inline-block;font-size:12px;">Ngân hàng</span> PVcombank</div><div><span style="color:var(--text-muted);min-width:90px;display:inline-block;font-size:12px;">Số TK</span> 10600056302</div><div><span style="color:var(--text-muted);min-width:90px;display:inline-block;font-size:12px;">Tên</span> Dang Thi Thanh Thuy</div></div>'
     : '';
   document.getElementById('confirm-bank-extra').innerHTML=confirmBank;
@@ -582,11 +616,11 @@ function changeMonth(dir){
 }
 
 function resetAll(){
-  selDate=null; selSlot=null; intentVal=null; contactType='zalo';
+  selDate=null; selSlot=null; coffeeCount=0; contactType='zalo';
   ['f-name','f-email','f-contact'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('intent-yes').classList.remove('selected');
-  document.getElementById('intent-no').classList.remove('selected');
-  document.getElementById('bank-box').classList.add('hidden');
+  document.getElementById('coffee-custom-input').value='';
+  document.getElementById('coffee-total').textContent='';
+  ['cup-1','cup-2','cup-3'].forEach(id=>document.getElementById(id).classList.remove('selected'));
   setContactType('zalo');
   hide('screen-confirm'); hide('screen-form'); hide('screen-booking');
   show('screen-landing');
